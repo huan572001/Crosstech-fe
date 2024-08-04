@@ -14,6 +14,7 @@ function App() {
   const [isActive, setActive] = useState<boolean>(false);
   const [color, setColor] = useState<any>("black");
   const [type, setType] = useState<User>();
+  console.log(type);
 
   return (
     <div className="A">
@@ -34,7 +35,7 @@ function App() {
       >
         HUân
       </Button>
-      <h1>Vite + React</h1>
+      <h1 onClick={() => setType(undefined)}>Vite + React</h1>
       <div className={clsx(isActive ? "bg-blue-500" : "bg-red-500")}>
         Nội dung của component
       </div>
