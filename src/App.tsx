@@ -1,36 +1,47 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import "./App.less";
 import { Button } from "antd";
-
+import clsx from "clsx";
+import logoSVG from "./assets/logo.svg";
+import logoPNG from "./assets/logo.png";
+import { LogoIcon } from "./common/icons";
+import { AppButton } from "./component/button";
+import { Navbar } from "./layout/Navbar";
+import { User } from "./type";
 function App() {
-  const [count, setCount] = useState(0);
+  const [isActive, setActive] = useState<boolean>(false);
+  const [color, setColor] = useState<any>("black");
+  const [type, setType] = useState<User>();
 
   return (
-    <>
-      <Button>hihihih</Button>
-      <div className="bg-red-600">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
+    <div className="A">
+      <Navbar />
+      <AppButton onClick={() => setActive(!isActive)}>A</AppButton>
+      <AppButton
+        onClick={() => {
+          setColor(isActive ? "blue" : "red");
+        }}
+      >
+        B
+      </AppButton>
+      <Button
+        onClick={() => {
+          setActive(!isActive);
+          setColor(isActive ? "blue" : "red");
+        }}
+      >
+        HUân
+      </Button>
       <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div className={clsx(isActive ? "bg-blue-500" : "bg-red-500")}>
+        Nội dung của component
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <LogoIcon color={color} />
+      <img src={logoSVG} />
+      <img src={logoPNG} />
+    </div>
   );
 }
 
