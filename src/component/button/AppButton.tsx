@@ -20,7 +20,7 @@ export const AppButton = ({
     <button
       className={clsx(
         disabled ? "bg-slate-500 text-slate-700" : "",
-        `${className} bg-blue-200 border rounded-3xl`
+        `${className} bg-blue-200 border rounded-3xl px-3 py-1 cursor-pointer`
       )}
       disabled={disabled || loading}
       onClick={onClick}

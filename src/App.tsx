@@ -1,47 +1,105 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import "./App.css";
 import "./App.less";
-import { Button } from "antd";
-import clsx from "clsx";
-import logoSVG from "./assets/logo.svg";
-import logoPNG from "./assets/logo.png";
-import { LogoIcon } from "./common/icons";
-import { AppButton } from "./component/button";
-import { Navbar } from "./layout/Navbar";
-import { User } from "./type";
-function App() {
-  const [isActive, setActive] = useState<boolean>(false);
-  const [color, setColor] = useState<any>("black");
-  const [type, setType] = useState<User>();
-  console.log(type);
 
+import { Navbar } from "./layout/Navbar";
+import { HomeAPI } from "./services/homeService";
+import { IUser } from "./type";
+import { Input, notification } from "antd";
+import { SearchProps } from "antd/es/input";
+const { Search } = Input;
+function App() {
+  const [user, setUser] = useState<IUser[]>([]);
+  const [userInfo, setUserInfo] = useState<any>();
+  const getUser = async () => {
+    try {
+      const rq = await HomeAPI.getUser();
+      if (rq.status) {
+        setUser(rq.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getUserById = async (address: string) => {
+    try {
+      const rq = await HomeAPI.getUserById(address);
+      if (rq?.success) {
+        setUserInfo(rq?.msg);
+      } else {
+        setUserInfo(undefined);
+      }
+    } catch (error) {
+      console.log(error);
+      setUserInfo(undefined);
+    }
+  };
+  const create = async (address: string) => {
+    try {
+      const rq = await HomeAPI.createUser({
+        address: address,
+        password: "1234156",
+      });
+      if (rq?.success) {
+        notification.info({
+          message: "success",
+        });
+      } else {
+        notification.warning({
+          message: rq?.msg,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      notification.error({
+        message: "error",
+      });
+    }
+  };
+  const onSearch: SearchProps["onSearch"] = (value) => {
+    getUserById(value);
+  };
+  const onCreateUser: SearchProps["onSearch"] = (value) => {
+    create(value);
+  };
+  useEffect(() => {
+    getUser();
+  }, []);
   return (
-    <div className="A">
+    <div className="mb-24">
       <Navbar />
-      <AppButton onClick={() => setActive(!isActive)}>A</AppButton>
-      <AppButton
-        onClick={() => {
-          setColor(isActive ? "blue" : "red");
-        }}
-      >
-        B
-      </AppButton>
-      <Button
-        onClick={() => {
-          setActive(!isActive);
-          setColor(isActive ? "blue" : "red");
-        }}
-      >
-        HUân
-      </Button>
-      <h1 onClick={() => setType(undefined)}>Vite + React</h1>
-      <div className={clsx(isActive ? "bg-blue-500" : "bg-red-500")}>
-        Nội dung của component
-      </div>
-      <LogoIcon color={color} />
-      <img src={logoSVG} />
-      <img src={logoPNG} />
+      <p>========================get all use=============</p>
+      {user.map((e) => {
+        return <div className="bg-red-500">{e.address.street}</div>;
+      })}
+      <p>========================get user by Id=============</p>
+      <Search
+        placeholder="input search text"
+        allowClear
+        enterButton="Search"
+        size="large"
+        onSearch={onSearch}
+      />
+      {userInfo ? (
+        <>
+          <p>address: {userInfo?.address}</p>
+          <p>twitterUsername: {userInfo?.twitterUsername}</p>
+        </>
+      ) : (
+        "Can not user"
+      )}
+      <p>
+        ========================================Register==========================
+      </p>
+      <Search
+        placeholder="input search text"
+        allowClear
+        enterButton="Search"
+        size="large"
+        onSearch={onCreateUser}
+      />
     </div>
   );
 }
