@@ -28,3 +28,32 @@ export interface IUser {
     bs: string;
   };
 }
+
+export interface IUserTask {
+  twitterUsername: string;
+  telegramId: string;
+  twitterId: string;
+  discordId: string;
+}
+export interface IVerifyTask {
+  joinChannelTelegram: boolean;
+  joinVibxDiscord: boolean;
+  joinTwitter: boolean;
+}
+
+export interface IBodyLoginSocial {
+  address: string;
+  typeSocial: string;
+}
+
+export enum SocialEnum {
+  TWITTER = "twitter",
+  DISCORD = "discord",
+  TELE = "telegram",
+}
+
+export enum STATUS_CARD {
+  DISABLE = "DISABLE",
+  FOLLOW = "FOLLOW",
+  VERIFY = "VERIFY",
+}

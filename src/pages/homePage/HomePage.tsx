@@ -1,25 +1,31 @@
 import { Connect } from "./component/Connect";
 import TableHome from "./component/TableHome/TableHome";
-import CounterRedux from "./component/CounterRedux";
-import { Button } from "antd";
 import { useAppDispatch } from "../../hooks/store";
-import { setOpenModal } from "../../redux/slice/homeSlice";
+import { useEffect } from "react";
+import { getTaskUser } from "../../redux/slice/connectSocial";
+import { Slider } from "./component/Slider";
 
 export const HomePage = () => {
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(getTaskUser("huan15"));
+  }, []);
   return (
     <>
       <Connect />
+      <Slider />
       <TableHome />
-      <CounterRedux />
-      <Button
+
+      {/* <CounterRedux /> */}
+
+      {/* <Button
         type="primary"
         onClick={() => {
           dispatch(setOpenModal());
         }}
       >
         Open Modal
-      </Button>
+      </Button> */}
     </>
   );
 };

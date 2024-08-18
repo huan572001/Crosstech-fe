@@ -1,26 +1,24 @@
 import { Button, Card, Popover, Typography } from "antd";
-import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { HomeAPI } from "../../../services/homeService";
-import { IUser } from "../../../type";
+import { SocialEnum } from "../../../type";
+import { getTaskUser } from "../../../redux/slice/connectSocial";
 export const Connect = () => {
-  const [data, setData] = useState<IUser>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const getUserById = async () => {
-    setLoading(true);
+  const { taskUser, loadingTaskUser } = useAppSelector((state) => state.social);
+  const dispatch = useAppDispatch();
+  const loginSocial = async () => {
     try {
-      const rq = await HomeAPI.getUserById("1");
-      if (rq) {
-        setData(rq);
+      const rq = await HomeAPI.loginSocial({
+        address: "huan15",
+        typeSocial: SocialEnum.TWITTER,
+      });
+      if (rq?.success) {
+        dispatch(getTaskUser("huan15"));
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
-  useEffect(() => {
-    getUserById();
-  }, []);
 
   return (
     <Card
@@ -61,10 +59,15 @@ export const Connect = () => {
 
           <Button
             className="w-fit px-8 bg-red-500 rounded-[25px] h-10 text-white text-base font-medium"
-            disabled={data?.name ? true : false}
-            loading={loading}
+            disabled={taskUser.twitterId?.length > 0}
+            loading={loadingTaskUser}
+            onClick={() => {
+              loginSocial();
+            }}
           >
-            {data?.name ? data?.name : "Connect your X account"}
+            {taskUser.twitterId?.length > 0
+              ? taskUser.twitterUsername
+              : "Connect your X account"}
           </Button>
         </div>
       </div>
