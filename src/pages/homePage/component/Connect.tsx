@@ -1,6 +1,27 @@
 import { Button, Card, Popover, Typography } from "antd";
-
+import { useEffect, useState } from "react";
+import { HomeAPI } from "../../../services/homeService";
+import { IUser } from "../../../type";
 export const Connect = () => {
+  const [data, setData] = useState<IUser>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const getUserById = async () => {
+    setLoading(true);
+    try {
+      const rq = await HomeAPI.getUserById("1");
+      if (rq) {
+        setData(rq);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    getUserById();
+  }, []);
+
   return (
     <Card
       className={
@@ -38,9 +59,13 @@ export const Connect = () => {
             </Popover>
           </div>
 
-          {/* <Button className="w-fit px-8 bg-red-500 rounded-[25px] h-10 text-white text-base font-medium">
-          Connect your X account
-        </Button> */}
+          <Button
+            className="w-fit px-8 bg-red-500 rounded-[25px] h-10 text-white text-base font-medium"
+            disabled={data?.name ? true : false}
+            loading={loading}
+          >
+            {data?.name ? data?.name : "Connect your X account"}
+          </Button>
         </div>
       </div>
     </Card>

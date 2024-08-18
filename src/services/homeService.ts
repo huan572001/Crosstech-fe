@@ -10,7 +10,9 @@ export const HomeAPI = {
     return response;
   },
   getUserById: async (address: string) => {
-    const response = await request.get(`/api/v1/user?address=${address}`);
+    const response = await axios.get<IUser>(
+      `https://jsonplaceholder.typicode.com/users/${address}`
+    );
     return response.data;
   },
   createUser: async (data: User) => {
