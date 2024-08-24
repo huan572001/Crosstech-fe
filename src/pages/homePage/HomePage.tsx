@@ -17,7 +17,7 @@ export const HomePage = () => {
   useEffect(() => {
     callApi("string");
   }, []);
-  console.log(data, loading);
+  console.log(data, loading, "dasdhasuduh");
 
   return (
     <>
